@@ -87,6 +87,12 @@ export class TaskService {
     this.tasksSubject.next(this.tasks)
   }
 
+  //delete task
+  deleteTask(id: number): void {
+    this.tasks = this.tasks.filter((task) => task.id !== id)
+    this.tasksSubject.next(this.tasks)
+  }
+
   private getNextId(): number {
     return Math.max(0, ...this.tasks.map((task) => task.id)) + 1
   }
