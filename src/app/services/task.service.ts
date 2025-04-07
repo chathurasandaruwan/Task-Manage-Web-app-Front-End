@@ -29,7 +29,7 @@ export class TaskService {
       description: "Create services for data management",
       status: "TO_DO",
       createdAt: "2025-04-02T11:45:00Z",
-      updatedAt: "2025-04-02T11:45:00Z",
+  
     },
     {
       id: 4,
@@ -79,6 +79,12 @@ export class TaskService {
         })
       }),
     )
+  }
+
+  //update task
+  updateTask(id: number, task: Omit<Task, "id" | "createdAt" | "updatedAt">): void {
+    this.tasks = this.tasks.map((t) => (t.id === id ? { ...t, ...task, updatedAt: new Date().toISOString() } : t))
+    this.tasksSubject.next(this.tasks)
   }
 
   private getNextId(): number {

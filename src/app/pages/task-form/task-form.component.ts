@@ -62,7 +62,8 @@ export class TaskFormComponent implements OnInit {
       status: ["TO_DO", Validators.required],
     })
   }
-
+  
+  //save and update 
   onSubmit(): void {
     this.submitted = true
 
@@ -71,7 +72,7 @@ export class TaskFormComponent implements OnInit {
     }
 
     if (this.isEditMode && this.taskId) {
-      console.log(this.taskId);
+      this.taskService.updateTask(this.taskId, this.taskForm.value)
       
     } else {
       // console.log(this.taskForm.value);
