@@ -6,7 +6,7 @@
       </div>
       <p class="card-text text-truncate">{{ task.description }}</p>
       <div class="d-flex justify-content-between align-items-center">
-        <small class="text-muted">Updated: {{ task.updatedAt | date:'medium' }}</small>
+        <small class="text-muted">Updated: {{ task.updatedAt ? task.updatedAt: task.createdAt | date:'medium' }}</small>
         <div class="btn-group">
           <a [routerLink]="['/tasks', task.id]" class="btn btn-sm btn-outline-primary">View</a>
           <a [routerLink]="['/tasks', task.id, 'edit']" class="btn btn-sm btn-outline-secondary">Edit</a>
