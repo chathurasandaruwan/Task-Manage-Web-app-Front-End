@@ -44,8 +44,26 @@ export class TaskService {
   private tasksSubject = new BehaviorSubject<Task[]>(this.tasks)
 
   constructor() {}
-
+  //get All tasks
   getTasks(): Observable<Task[]> {
     return this.tasksSubject.asObservable()
+  }
+
+  // add new task
+  addTask(task: Omit<Task, "id" | "createdAt" | "updatedAt">): void {
+    const now = new Date().toISOString()
+    const newTask: Task = {
+      ...task,
+      id: this.getNextId(),
+      createdAt: now,
+      updatedAt: now,
+    }
+
+    this.tasks = [...this.tasks, newTask]
+    this.tasksSubject.next(this.tasks)
+  }
+
+  private getNextId(): number {
+    return Math.max(0, ...this.tasks.map((task) => task.id)) + 1
   }
 }
