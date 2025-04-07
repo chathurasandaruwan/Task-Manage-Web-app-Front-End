@@ -81,5 +81,10 @@ export class TaskFormComponent implements OnInit {
 
     this.router.navigate(["/tasks"])
   }
+  //go back
+  goBack(): void {
+    this.submitted = false
+    this.router.navigate(["/tasks"])
+  }
 }
 
