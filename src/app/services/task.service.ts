@@ -63,6 +63,24 @@ export class TaskService {
     this.tasksSubject.next(this.tasks)
   }
 
+  //get by Id
+  getTaskById(id: number): Observable<Task | undefined> {
+    return of(this.tasks.find((task) => task.id === id))
+  }
+
+  //filter tasks
+  filterTasks(title = "", status: TaskStatus | "" = ""): Observable<Task[]> {
+    return this.getTasks().pipe(
+      map((tasks) => {
+        return tasks.filter((task) => {
+          const matchesTitle = title ? task.title.toLowerCase().includes(title.toLowerCase()) : true
+          const matchesStatus = status ? task.status === status : true
+          return matchesTitle && matchesStatus
+        })
+      }),
+    )
+  }
+
   private getNextId(): number {
     return Math.max(0, ...this.tasks.map((task) => task.id)) + 1
   }
