@@ -30,8 +30,25 @@ export class TaskFormComponent implements OnInit {
     this.taskId = Number(this.route.snapshot.paramMap.get("id"))
     if (this.taskId) {
       this.isEditMode = true
-      // this.loadTask(this.taskId)
+      this.loadTask(this.taskId)
     }
+  }
+
+  //load task to form to edit
+  loadTask(id: number): void {
+    this.loading = true
+    this.taskService.getTaskById(id).subscribe((task) => {
+      if (task) {
+        this.taskForm.patchValue({
+          title: task.title,
+          description: task.description,
+          status: task.status,
+        })
+      } else {
+        this.router.navigate(["/tasks"])
+      }
+      this.loading = false
+    })
   }
 
   get f() {
@@ -57,8 +74,7 @@ export class TaskFormComponent implements OnInit {
       console.log(this.taskId);
       
     } else {
-      console.log(this.taskForm.value);
-      
+      // console.log(this.taskForm.value);
       this.taskService.addTask(this.taskForm.value)
     }
 
