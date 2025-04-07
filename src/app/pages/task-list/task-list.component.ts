@@ -35,8 +35,7 @@ export class TaskListComponent implements OnInit {
 
   onDeleteTask(id: number): void {
     if (confirm("Are you sure you want to delete this task?")) {
-      console.log('need delete id ', id);
-      
+      this.taskService.deleteTask(id)
     }
   }
 }
