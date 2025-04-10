@@ -1,10 +1,11 @@
 export type TaskStatus = "TO_DO" | "IN_PROGRESS" | "DONE"
 
 export interface Task {
-  id: number
+  taskId: string
   title: string
   description: string
   status: TaskStatus
+  userId: string
   createdAt: string
   updatedAt?: string
 }

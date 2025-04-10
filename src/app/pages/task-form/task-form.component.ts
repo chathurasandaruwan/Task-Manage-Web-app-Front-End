@@ -13,9 +13,11 @@ import { NgClass, NgIf } from "@angular/common"
 export class TaskFormComponent implements OnInit {
   taskForm!: FormGroup
   isEditMode = false
-  taskId?: number
+  taskId?: string
   loading = false
   submitted = false
+  submitting = false
+  error = ""
 
   constructor(
     private fb: FormBuilder,
@@ -27,27 +29,39 @@ export class TaskFormComponent implements OnInit {
   ngOnInit(): void {
     this.initForm()
 
-    this.taskId = Number(this.route.snapshot.paramMap.get("id"))
-    if (this.taskId) {
-      this.isEditMode = true
-      this.loadTask(this.taskId)
-    }
+    const idParam = this.route.snapshot.paramMap.get("id")
+if (idParam) {
+  this.taskId = idParam
+  console.log('task id eka ',this.taskId);
+  
+  this.isEditMode = true
+  this.loadTask(this.taskId)
+}
   }
 
   //load task to form to edit
-  loadTask(id: number): void {
+  loadTask(id: string): void {
     this.loading = true
-    this.taskService.getTaskById(id).subscribe((task) => {
-      if (task) {
-        this.taskForm.patchValue({
-          title: task.title,
-          description: task.description,
-          status: task.status,
-        })
-      } else {
-        this.router.navigate(["/tasks"])
-      }
-      this.loading = false
+    this.error = ""
+    this.taskService.getTaskById(id).subscribe({
+      next: (task) => {
+        if (task) {
+          this.taskForm.patchValue({
+            title: task.title,
+            description: task.description,
+            status: task.status,
+          })
+        } else {
+          this.error = "Task not found"
+          setTimeout(() => this.router.navigate(["/tasks"]), 3000)
+        }
+        this.loading = false
+      },
+      error: (err) => {
+        this.error = err.message || "Failed to load task"
+        this.loading = false
+        setTimeout(() => this.router.navigate(["/tasks"]), 3000)
+      },
     })
   }
 
@@ -71,15 +85,30 @@ export class TaskFormComponent implements OnInit {
       return
     }
 
-    if (this.isEditMode && this.taskId) {
-      this.taskService.updateTask(this.taskId, this.taskForm.value)
-      
-    } else {
-      // console.log(this.taskForm.value);
-      this.taskService.addTask(this.taskForm.value)
-    }
+    this.submitting = true
+    this.error = ""
 
-    this.router.navigate(["/tasks"])
+    if (this.isEditMode && this.taskId) {
+      this.taskService.updateTask(this.taskId, this.taskForm.value).subscribe({
+        next: () => {
+          this.router.navigate(["/tasks"])
+        },
+        error: (err : Error) => {
+          this.error = err.message || "Failed to update task"
+          this.submitting = false
+        },
+      })
+    } else {
+      this.taskService.addTask(this.taskForm.value).subscribe({
+        next: () => {
+          this.router.navigate(["/tasks"])
+        },
+        error: (err) => {
+          this.error = err.message || "Failed to create task"
+          this.submitting = false
+        },
+      })
+    }
   }
   //go back
   goBack(): void {

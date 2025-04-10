@@ -11,10 +11,10 @@ import { DatePipe, NgClass } from '@angular/common';
 })
 export class TaskCardComponent {
   @Input() task!: Task
-  @Output() delete = new EventEmitter<number>()
+  @Output() delete = new EventEmitter<string>()
 
   onDelete(): void {
-    this.delete.emit(this.task.id)
+    this.delete.emit(this.task.taskId)
   }
 
   getStatusClass(): string {

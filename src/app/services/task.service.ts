@@ -15,34 +15,66 @@ export class TaskService {
   //get All tasks
   getTasks(): Observable<Task[]> {
     const currentUserId = localStorage.getItem('currentUser')
+    console.log(currentUserId);
+    
     if (!this.tasksLoaded) {
       const url = `${this.apiUrl}/getAllTasks/${currentUserId}`
       return this.http.get<Task[]>(url).pipe(
         tap((tasks) => {
           this.tasksSubject.next(tasks)
+          
           this.tasksLoaded = true
         }),
         catchError(this.handleError),
       )
     }
+    
     return this.tasksSubject.asObservable()
   }
   // add new task
-  addTask(task: Omit<Task, "id" | "createdAt" | "updatedAt">): void {
-    // const now = new Date().toISOString()
-    // const newTask: Task = {
-    //   ...task,
-    //   id: this.getNextId(),
-    //   createdAt: now,
-    //   updatedAt: now,
-    // }
+  // addTask(task: Omit<Task, "id" | "createdAt" | "updatedAt | userId">): Observable<Task> {
+  //   const currentUserId = localStorage.getItem('currentUser')
+  //   console.log(currentUserId);
+    
+  // if (!currentUserId) {
+  //   throw new Error('User not logged in')
+  // }
 
-    // this.tasks = [...this.tasks, newTask]
-    // this.tasksSubject.next(this.tasks)
+  // // Add the userId to the task object
+  // const taskWithUser = { ...task, userId: currentUserId }
+
+  //   return this.http.post<Task>(this.apiUrl, taskWithUser).pipe(
+  //     tap((newTask) => {
+  //       const currentTasks = this.tasksSubject.value
+  //       this.tasksSubject.next([...currentTasks, newTask])
+  //     }),
+  //     catchError(this.handleError),
+  //   )
+  // }
+  addTask(task: Omit<Task, "id" | "createdAt" | "updatedAt" >): Observable<Task> {
+    const currentUserId = localStorage.getItem('currentUser')
+  
+    if (!currentUserId) {
+      throw new Error('User not logged in')
+    }
+  
+    // Add the userId to the task object
+    const taskWithUser = { ...task, userId: currentUserId }
+    console.log(taskWithUser);
+    
+  
+    return this.http.post<Task>(this.apiUrl, taskWithUser).pipe(
+      tap((newTask) => {
+        const currentTasks = this.tasksSubject.value
+        this.tasksSubject.next([...currentTasks, newTask])
+      }),
+      catchError(this.handleError),
+    )
   }
+  
 
   //get by Id
-  getTaskById(id: number): Observable<Task | undefined> {
+  getTaskById(id: string): Observable<Task | undefined> {
     return this.http.get<Task>(`${this.apiUrl}/${id}`).pipe(catchError(this.handleError))
   }
 
@@ -60,13 +92,16 @@ export class TaskService {
   }
 
   // //update task
-  updateTask(id: number, task: Omit<Task, "id" | "createdAt" | "updatedAt">): void {
+  updateTask(id: string, task: Omit<Task, "taskId" | "createdAt" | "updatedAt">): Observable<Task> {
+    return this.http.put<any>(`${this.apiUrl}/${id}`, task);
     // this.tasks = this.tasks.map((t) => (t.id === id ? { ...t, ...task, updatedAt: new Date().toISOString() } : t))
     // this.tasksSubject.next(this.tasks)
   }
 
   //delete task
-  deleteTask(id: number): void {
+  deleteTask(id: string): void {
+    console.log(id);
+    
     // this.tasks = this.tasks.filter((task) => task.id !== id)
     // this.tasksSubject.next(this.tasks)
   }

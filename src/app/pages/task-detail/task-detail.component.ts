@@ -21,11 +21,12 @@ export class TaskDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get("id"))
+    const id = String(this.route.snapshot.paramMap.get("id"))
+    console.log('task id from detail',id);
     this.loadTask(id)
   }
 
-  loadTask(id: number): void {
+  loadTask(id: string): void {
     this.taskService.getTaskById(id).subscribe((task) => {
       this.task = task
       this.loading = false
@@ -51,7 +52,7 @@ export class TaskDetailComponent implements OnInit {
     if (!this.task) return
 
     if (confirm("Are you sure you want to delete this task?")) {
-      this.taskService.deleteTask(this.task.id)
+      this.taskService.deleteTask(this.task.taskId)
       this.router.navigate(["/tasks"])
     }
   }
