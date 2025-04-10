@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = "http://localhost:5050/taskmanager/auth"
+  private apiUrl = "http://localhost:5050/TaskManager/api/v1/auth"
   private currentUserSubject = new BehaviorSubject<string | null>(null)
   public currentUser$ = this.currentUserSubject.asObservable()
 

@@ -29,6 +29,6 @@ export class AppComponent implements OnInit{
     // Hide navbar on auth 
     console.log('checkIfAuthPage', url);
     
-    this.isAuthPage = url.includes("/signin") || url.includes("/signup") || url.includes("/")
+    this.isAuthPage = url.includes("/signin") || url.includes("/signup") || url==="/"
   }
 }
