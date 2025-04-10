@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { filter } from 'rxjs';
@@ -10,7 +10,7 @@ import { CommonModule, NgIf } from '@angular/common';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent {
+export class AppComponent implements OnInit{
   isAuthPage = false
 
   constructor(private router: Router) {}
@@ -26,7 +26,9 @@ export class AppComponent {
   }
 
   private checkIfAuthPage(url: string): void {
-    // Hide navbar on auth pages
-    this.isAuthPage = url.includes("/signin") || url.includes("/signup")
+    // Hide navbar on auth 
+    console.log('checkIfAuthPage', url);
+    
+    this.isAuthPage = url.includes("/signin") || url.includes("/signup") || url.includes("/")
   }
 }
