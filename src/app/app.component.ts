@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { filter } from 'rxjs';
+import { CommonModule, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NavbarComponent],
+  imports: [RouterOutlet, NavbarComponent, NgIf],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
