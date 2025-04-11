@@ -4,6 +4,7 @@ import { TaskService } from '../../services/task.service';
 import { NgFor, NgIf } from '@angular/common';
 import { TaskCardComponent } from '../../components/task-card/task-card.component';
 import { TaskFilterComponent } from '../../components/task-filter/task-filter.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-task-list',
@@ -33,9 +34,19 @@ export class TaskListComponent implements OnInit {
     this.loadTasks(filters.title, filters.status)
   }
 
-  onDeleteTask(id: string): void {
+  onDeleteTask(taskId: string): void {
+    if (!taskId) return
+
     if (confirm("Are you sure you want to delete this task?")) {
-      this.taskService.deleteTask(id)
+      this.taskService.deleteTask(taskId).subscribe({
+        next: () => {
+          this.taskService.loadTasks()
+          this.loadTasks()
+        },
+        error: (err : Error) => {
+          alert(err.message || "Failed to delete task")
+        },
+      })
     }
   }
 }

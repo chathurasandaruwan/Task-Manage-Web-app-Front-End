@@ -6,6 +6,6 @@ export interface Task {
   description: string
   status: TaskStatus
   userId: string
-  createdAt: string
-  updatedAt?: string
+  createdAt: Date
+  updatedAt?: Date
 }

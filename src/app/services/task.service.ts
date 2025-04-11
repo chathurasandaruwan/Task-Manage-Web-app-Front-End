@@ -9,6 +9,7 @@ import { HttpClient } from "@angular/common/http"
 export class TaskService {
   private apiUrl = "http://localhost:5050/TaskManager/api/v1/task"
   private tasksSubject = new BehaviorSubject<Task[]>([])
+  tasks$ = this.tasksSubject.asObservable();
   private tasksLoaded = false
   
   constructor(private http: HttpClient) {}
@@ -31,26 +32,12 @@ export class TaskService {
     
     return this.tasksSubject.asObservable()
   }
-  // add new task
-  // addTask(task: Omit<Task, "id" | "createdAt" | "updatedAt | userId">): Observable<Task> {
-  //   const currentUserId = localStorage.getItem('currentUser')
-  //   console.log(currentUserId);
-    
-  // if (!currentUserId) {
-  //   throw new Error('User not logged in')
-  // }
-
-  // // Add the userId to the task object
-  // const taskWithUser = { ...task, userId: currentUserId }
-
-  //   return this.http.post<Task>(this.apiUrl, taskWithUser).pipe(
-  //     tap((newTask) => {
-  //       const currentTasks = this.tasksSubject.value
-  //       this.tasksSubject.next([...currentTasks, newTask])
-  //     }),
-  //     catchError(this.handleError),
-  //   )
-  // }
+  //load after edit
+  loadTasks(): Observable<Task[]> {
+    this.tasksLoaded = false
+    return this.getTasks()
+  }
+  //add task
   addTask(task: Omit<Task, "id" | "createdAt" | "updatedAt" >): Observable<Task> {
     const currentUserId = localStorage.getItem('currentUser')
   
@@ -65,6 +52,8 @@ export class TaskService {
   
     return this.http.post<Task>(this.apiUrl, taskWithUser).pipe(
       tap((newTask) => {
+        // console.log('newTask',newTask);
+        
         const currentTasks = this.tasksSubject.value
         this.tasksSubject.next([...currentTasks, newTask])
       }),
@@ -92,23 +81,17 @@ export class TaskService {
   }
 
   // //update task
-  updateTask(id: string, task: Omit<Task, "taskId" | "createdAt" | "updatedAt">): Observable<Task> {
-    return this.http.put<any>(`${this.apiUrl}/${id}`, task);
-    // this.tasks = this.tasks.map((t) => (t.id === id ? { ...t, ...task, updatedAt: new Date().toISOString() } : t))
-    // this.tasksSubject.next(this.tasks)
+  updateTask(id: string, task: Omit<Task, "id" | "createdAt" | "updatedAt">): Observable<Task> {
+    return this.http.put<Task>(`${this.apiUrl}/${id}`, task).pipe(catchError(this.handleError));
   }
+  
 
   //delete task
-  deleteTask(id: string): void {
-    console.log(id);
-    
-    // this.tasks = this.tasks.filter((task) => task.id !== id)
-    // this.tasksSubject.next(this.tasks)
+  deleteTask(taskId: string): Observable<void> {
+    console.log('need delete ',taskId);
+    return this.http.delete<void>(`${this.apiUrl}/${taskId}`).pipe(catchError(this.handleError),);
   }
 
-  // private getNextId(): number {
-  //   return Math.max(0, ...this.tasks.map((task) => task.id)) + 1
-  // }
   private handleError(error: any) {
     let errorMessage = "An unknown error occurred"
     if (error.error instanceof ErrorEvent) {

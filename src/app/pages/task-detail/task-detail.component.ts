@@ -52,9 +52,21 @@ export class TaskDetailComponent implements OnInit {
     if (!this.task) return
 
     if (confirm("Are you sure you want to delete this task?")) {
-      this.taskService.deleteTask(this.task.taskId)
-      this.router.navigate(["/tasks"])
+      this.taskService.deleteTask(this.task.taskId).subscribe({
+        next: () => {
+          this.router.navigate(["/tasks"])
+          this.taskService.loadTasks()
+        },
+        error: (err : Error) => {
+          alert(err.message || "Failed to delete task")
+        },
+      })
     }
+  }
+
+  editTask(): void {
+    if (!this.task) return
+    this.router.navigate(["/tasks"])
   }
 
   goBack(): void {

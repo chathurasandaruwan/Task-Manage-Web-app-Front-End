@@ -92,6 +92,7 @@ if (idParam) {
       this.taskService.updateTask(this.taskId, this.taskForm.value).subscribe({
         next: () => {
           this.router.navigate(["/tasks"])
+          this.taskService.loadTasks()
         },
         error: (err : Error) => {
           this.error = err.message || "Failed to update task"
