@@ -8,7 +8,6 @@ import { CommonModule, NgClass, NgIf } from '@angular/common';
   selector: 'app-sign-in',
   imports: [ReactiveFormsModule, RouterLink, CommonModule],
   templateUrl: './sign-in.component.html',
-  styleUrl: './sign-in.component.scss'
 })
 export class SignInComponent {
   signInForm: FormGroup

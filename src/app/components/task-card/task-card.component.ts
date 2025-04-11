@@ -7,7 +7,6 @@ import { DatePipe, NgClass } from '@angular/common';
   selector: 'app-task-card',
   imports: [RouterLink, NgClass, DatePipe],
   templateUrl: './task-card.component.html',
-  styleUrl: './task-card.component.scss'
 })
 export class TaskCardComponent {
   @Input() task!: Task

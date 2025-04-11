@@ -16,20 +16,17 @@ export class TaskService {
   //get All tasks
   getTasks(): Observable<Task[]> {
     const currentUserId = localStorage.getItem('currentUser')
-    console.log(currentUserId);
-    
+
     if (!this.tasksLoaded) {
       const url = `${this.apiUrl}/getAllTasks/${currentUserId}`
       return this.http.get<Task[]>(url).pipe(
         tap((tasks) => {
           this.tasksSubject.next(tasks)
-          
           this.tasksLoaded = true
         }),
         catchError(this.handleError),
       )
     }
-    
     return this.tasksSubject.asObservable()
   }
   //load after edit
@@ -47,13 +44,8 @@ export class TaskService {
   
     // Add the userId to the task object
     const taskWithUser = { ...task, userId: currentUserId }
-    console.log(taskWithUser);
-    
-  
     return this.http.post<Task>(this.apiUrl, taskWithUser).pipe(
       tap((newTask) => {
-        // console.log('newTask',newTask);
-        
         const currentTasks = this.tasksSubject.value
         this.tasksSubject.next([...currentTasks, newTask])
       }),
@@ -88,7 +80,6 @@ export class TaskService {
 
   //delete task
   deleteTask(taskId: string): Observable<void> {
-    console.log('need delete ',taskId);
     return this.http.delete<void>(`${this.apiUrl}/${taskId}`).pipe(catchError(this.handleError),);
   }
 

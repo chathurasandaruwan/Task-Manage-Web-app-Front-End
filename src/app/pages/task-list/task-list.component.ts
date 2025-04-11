@@ -10,7 +10,6 @@ import { Router } from '@angular/router';
   selector: 'app-task-list',
   imports: [NgIf, TaskCardComponent, NgFor, TaskFilterComponent],
   templateUrl: './task-list.component.html',
-  styleUrl: './task-list.component.scss'
 })
 export class TaskListComponent implements OnInit {
   tasks: Task[] = []

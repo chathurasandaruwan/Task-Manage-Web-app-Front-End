@@ -32,7 +32,6 @@ export class TaskFormComponent implements OnInit {
     const idParam = this.route.snapshot.paramMap.get("id")
 if (idParam) {
   this.taskId = idParam
-  console.log('task id eka ',this.taskId);
   
   this.isEditMode = true
   this.loadTask(this.taskId)

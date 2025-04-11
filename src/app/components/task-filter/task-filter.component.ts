@@ -6,7 +6,6 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
   selector: 'app-task-filter',
   imports: [ReactiveFormsModule],
   templateUrl: './task-filter.component.html',
-  styleUrl: './task-filter.component.scss'
 })
 export class TaskFilterComponent {
   @Output() filter = new EventEmitter<{ title: string; status: TaskStatus | "" }>()

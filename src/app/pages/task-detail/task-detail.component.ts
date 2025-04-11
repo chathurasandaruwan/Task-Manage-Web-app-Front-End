@@ -8,7 +8,6 @@ import { DatePipe, NgClass, NgIf } from '@angular/common';
   selector: 'app-task-detail',
   imports: [NgIf,NgClass, DatePipe, RouterLink],
   templateUrl: './task-detail.component.html',
-  styleUrl: './task-detail.component.scss'
 })
 export class TaskDetailComponent implements OnInit {
   task?: Task
@@ -22,7 +21,6 @@ export class TaskDetailComponent implements OnInit {
 
   ngOnInit(): void {
     const id = String(this.route.snapshot.paramMap.get("id"))
-    console.log('task id from detail',id);
     this.loadTask(id)
   }
 

@@ -8,7 +8,6 @@ import { CommonModule } from '@angular/common';
   selector: 'app-sign-up',
   imports: [CommonModule, ReactiveFormsModule ,RouterLink],
   templateUrl: './sign-up.component.html',
-  styleUrl: './sign-up.component.scss'
 })
 export class SignUpComponent {
   signUpForm: FormGroup
@@ -46,7 +45,6 @@ export class SignUpComponent {
         // return if another validator has already found an error
         return
       }
-
       // set error on matchingControl if validation fails
       if (control.value !== matchingControl.value) {
         matchingControl.setErrors({ mustMatch: true })
@@ -59,12 +57,11 @@ export class SignUpComponent {
   onSubmit(): void {
     this.submitted = true
     this.error = ""
-
     // Stop if form is invalid
     if (this.signUpForm.invalid) {
       return
     }
-
+    
     this.loading = true
     this.authService
       .register(this.signUpForm.value.email, this.signUpForm.value.password)
